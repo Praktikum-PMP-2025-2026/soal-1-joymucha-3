@@ -1,71 +1,106 @@
-/** EL2008 Praktikum Pemecahan Masalah dengan Pemrograman 2025/2026
+/* EL2008 Praktikum Pemecahan Masalah dengan Pemrograman 2025/2026
 * Modul : 4 - Dynamic Structure
 * Hari dan Tanggal : Rabu, 6 Mei 2026
-* Nama File : 
+* Nama File : antrian.c
 * Pembuat : Joachim (13224034)
-* Deskripsi: 
+* Deskripsi: kasih list antrian, hitung jumlah waktu
 */
-#include <stdbool.h>
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#define MAX_SIZE 100
+// Define the structure for a node of the linked list
+typedef struct Node{
+    char data[50];
+    struct Node *next;
+} node;
 
-typedef struct {
-    char nama[50];
-} pasien;
+// Define the structure for the queue
+typedef struct Queue{
+    node *front;
+    node *rear;
+} queue;
 
-typedef struct {
-    pasien items[MAX_SIZE];
-    int front;
-    int rear;
-} Queue;
-
-void initializeQueue(Queue *q) {
-    q->front = -1;
-    q->rear = 0;
+// Function to create a new queue
+queue *createQueue(){
+    // Allocate memory for a new queue
+    queue *newQueue = (queue *)malloc(sizeof(queue));
+    // Initialize the front and rear pointers of the queue
+    newQueue->front = newQueue->rear = NULL;
+    return newQueue;
 }
 
-bool isEmpty(Queue *q) {
-    return (q->front == q->rear - 1);
+// Function to check if the queue is empty
+int isEmpty(queue *q){
+    // Check if the front pointer is NULL
+    return q->front == NULL;
 }
 
-void enqueue(Queue *q, char* nama) {
-    // Memasukkan data ke posisi rear
-    strcpy(q->items[q->rear].nama, nama);
-    q->rear++;
+// Function to create a new node
+node *createNode(char* data){
+    // Allocate memory for a new node
+    node *newNode = (node *)malloc(sizeof(node));
+    // Check if memory allocation was successful
+    if (newNode == NULL)
+        return NULL;
+    // Initialize the node's data and next pointer
+    strcpy(newNode->data, data);
+    newNode->next = NULL;
+    return newNode;
 }
 
+// Function to add an element to the queue
+void enqueue(queue *q, char *data){
+    // Create a new node with the given data
 
-void printQueue(Queue *q) {
-    if (isEmpty(q)) {
-        printf("Tidak ada data\n");
+    node *newNode = createNode(data);
+    strcpy(newNode->data, data);
+
+    // Add the new node at the end of the queue and update
+    // the rear pointer
+    if (q->rear == NULL)
+    {
+        q->front = q->rear = newNode;
         return;
     }
+    q->rear->next = newNode;
 
+    q->rear = newNode;
+}
+
+
+
+void printQueue(queue *q){
+    // Traverse the queue and print each element
+    node *temp = q->front;
     printf("ORDER");
-    for (int i = q->front + 1; i < q->rear; i++) {
-        printf(" %s", q->items[i].nama);
+    while (temp != NULL)
+    {
+        printf(" %s", temp->data);
+        temp = temp->next;
     }
 }
 
-int main() {
-    Queue antiran;
-    initializeQueue(&antiran);
+
+int main(){
     int N;
-    char id[50];
+    char id[5];
     int waktu = 0; int totalwaktu = 0; int TOTALWAKTU = 0;
+    queue *q = createQueue();
 
     scanf("%d", &N);
     for(int i = 0; i<N; i++){
         totalwaktu = totalwaktu + waktu;
         TOTALWAKTU = TOTALWAKTU + totalwaktu;
         scanf("%s %d", id ,&waktu);
-        enqueue(&antiran, id);
+        enqueue(q, id);
     }
+    
 
-    printQueue(&antiran);
+    printQueue(q);
     printf("\nWAIT %d", TOTALWAKTU);
+
 }
 
 //4 A01 3 AO2 5 A03 2 A04 4
