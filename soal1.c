@@ -43,9 +43,9 @@ void printQueue(Queue *q) {
         return;
     }
 
-    printf("ORDER ");
+    printf("ORDER");
     for (int i = q->front + 1; i < q->rear; i++) {
-        printf("%s ", q->items[i].nama);
+        printf(" %s", q->items[i].nama);
     }
 }
 
